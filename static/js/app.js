@@ -51,13 +51,13 @@ function updatePlotly() {
             text: labels,
             orientation: "h"
 };
-let data1 = [trace1];
+let bardata = [trace1];
 
         let layout = {
             title: "Top 10 OTU",
             barmode: "group"
         };
-        Plotly.newPlot("bar", data1, layout);
+        Plotly.newPlot("bar", bardata, layout);
 
     }); 
 };
