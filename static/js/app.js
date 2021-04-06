@@ -43,3 +43,14 @@ function updatePlotly() {
   
 };
 
+var y = otu_ids_sliced.map(function (a) { return "OTU ID " + a; });
+var x = values_sliced.sort((a, b) => a - b);
+var labels = labels_sliced;
+
+var trace1 = {
+    x: x,
+    y: y,
+    type: "bar",
+    text: labels,
+    orientation: "h"
+};
