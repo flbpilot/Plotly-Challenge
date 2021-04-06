@@ -106,7 +106,7 @@ function updatePlotly() {
                     { range: [5, 6], color: 'rgb(255, 102, 102)' },
                     { range: [6, 7], color: 'rgb(255, 77, 77)' },
                     { range: [7, 8], color: 'rgb(255, 51, 51)' },
-                    { range: [8, 9], color: 'rgb(255, 26, 26)' }
+                    { range: [8, 9], color: 'rgb(200, 6, 6)' }
                 ]
 
             }
