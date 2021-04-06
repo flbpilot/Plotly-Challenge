@@ -4,10 +4,9 @@ function unpack(rows, index) {
     });
 }
 
-
 d3.json("samples.json").then(function (data) {
-    let ids = unpack(data.metadata, "id");
-    d3.select("#data")
+    var ids = unpack(data.metadata, "id");
+    d3.select("#sub_data")
         .selectAll("select")
         .data(ids)
         .enter()
@@ -22,42 +21,99 @@ d3.json("samples.json").then(function (data) {
 });
 
 
-d3.selectAll("#data").on("change", updatePlotly);
-
+d3.selectAll("#sub_data").on("change", updatePlotly);
 function updatePlotly() {
-    let dropdownMenu = d3.select("#data");
-    let dataset = dropdownMenu.property("value");
+    var dropdownMenu = d3.select("#sub_data");
+    var dataset = dropdownMenu.property("value");
     console.log(dataset)
 
 
     d3.json("samples.json").then((data) => {
-        let person_id = data.samples.find(({ id }) => id === dataset);
+        var person_id = data.samples.find(({ id }) => id === dataset);
         console.log(person_id);
-        let otu_ids_sliced = person_id.otu_ids.slice(0, 10);
+        var otu_ids_sliced = person_id.otu_ids.slice(0, 10);
         console.log(otu_ids_sliced);
-        let values_sliced = person_id.sample_values.slice(0, 10);
+        var values_sliced = person_id.sample_values.slice(0, 10);
         console.log(values_sliced);
-        let labels_sliced = person_id.otu_labels.slice(0, 10);
+        var labels_sliced = person_id.otu_labels.slice(0, 10);
 
 
-        let y = otu_ids_sliced.map(function (a) { return "OTU ID " + a; });
-        let x = values_sliced.sort((a, b) => a - b);
-        let labels = labels_sliced;
 
-        let trace1 = {
+        var y = otu_ids_sliced.map(function (a) { return "OTU ID " + a; });
+        var x = values_sliced.sort((a, b) => a - b);
+        var labels = labels_sliced;
+
+        var tracebar = {
             x: x,
             y: y,
             type: "bar",
             text: labels,
             orientation: "h"
-};
-let bardata = [trace1];
+        };
 
-        let layout = {
-            title: "Top 10 OTU",
+        var bardata = [tracebar];
+        var layout = {
+            title: "Top 10 OTUs",
             barmode: "group"
         };
+
         Plotly.newPlot("bar", bardata, layout);
 
-    }); 
+
+        var bubbledata = [tracebubble];
+        var layout2 = {
+            title: "OTUs (Operational Taxonomic Units)",
+            xaxis: { title: "OTU ID" },
+        };
+        Plotly.newPlot("bubble", bubbledata, layout2);
+
+    });
+
+
+    demographic_data = parseInt(dataset)
+    d3.json("samples.json").then((data) => {
+        var dem_data = data.metadata.find(({ id }) => id === demographic_data);
+
+        var indv_dem_data = d3.select("#sample-metadata");
+        indv_dem_data.text("");
+        Object.entries(dem_data).forEach((key) => {   
+            indv_dem_data.append("h4").text(key[0] + ": " + key[1]);    
+        });
+
+        var wfreq = dem_data.wfreq;
+        console.log(wfreq)
+
+        var tacegauge = {
+            domain: { x: [0, 1], y: [0, 1] },
+            value: wfreq,
+            title: { text: "Weekly Scrubs" },
+            type: "indicator",
+            mode: "gauge+number",
+            gauge: {
+                axis: {range: [0,9], 
+                    tickmode: 'linear',
+                    tickfont: {
+                        size: 15
+                    }
+                },
+                bar: { color: "black" },
+                steps: [
+                    { range: [0, 1], color: 'rgb(255, 255, 255)' },
+                    { range: [1, 2], color: 'rgb(255, 230, 230)' },
+                    { range: [2, 3], color: 'rgb(255, 204, 204)' },
+                    { range: [3, 4], color: 'rgb(255, 179, 179)' },
+                    { range: [4, 5], color: 'rgb(255, 128, 128)' },
+                    { range: [5, 6], color: 'rgb(255, 102, 102)' },
+                    { range: [6, 7], color: 'rgb(255, 77, 77)' },
+                    { range: [7, 8], color: 'rgb(255, 51, 51)' },
+                    { range: [8, 9], color: 'rgb(255, 26, 26)' }
+                ]
+
+            }
+        };
+        var datagauge = [tacegauge];
+        Plotly.newPlot("gauge", datagauge);
+
+    });
+  
 };
