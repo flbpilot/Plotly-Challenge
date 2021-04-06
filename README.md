@@ -1,6 +1,6 @@
 Plotly-Challenge
 
-<h2><a href="flbpilot.github.io/homework-14/">Project Link</a></h2>
+<h2><a href="https://flbpilot.github.io/homework-14/">Project Link</a></h2>
 
 the obejctive of this homework is building a dashboard for the Microbes caused Belly Button from <a href="http://robdunnlab.com/projects/belly-button-biodiversity/">the Belly Button Biodiversity dataset</a> 
 
