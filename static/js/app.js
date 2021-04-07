@@ -3,7 +3,7 @@ function unpack(rows, index) {
         return row[index];
     });
 }
-
+////////////////////////////////////////////////////////////////////////
 d3.json("samples.json").then(function (data) {
     var ids = unpack(data.metadata, "id");
     d3.select("#sub_data")
@@ -14,20 +14,16 @@ d3.json("samples.json").then(function (data) {
         .html(function (d) {
             return `<option value ="${d}">${d}</option>`;
         });
-
-
     console.log(data);
     updatePlotly();
 });
-
-
+////////////////////////////////////////////////////////////////////////
 d3.selectAll("#sub_data").on("change", updatePlotly);
 function updatePlotly() {
     var dropdownMenu = d3.select("#sub_data");
     var dataset = dropdownMenu.property("value");
     console.log(dataset)
-
-
+////////////////////////////////////////////////////////////////////////
     d3.json("samples.json").then((data) => {
         var person_id = data.samples.find(({ id }) => id === dataset);
         console.log(person_id);
@@ -58,18 +54,36 @@ function updatePlotly() {
         };
 
         Plotly.newPlot("bar", bardata, layout);
+////////////////////////////////////////////////////////////////////////
+        var otu_ids = person_id.otu_ids;
+        var values = person_id.sample_values;
+        var labels = person_id.otu_labels;
 
+        var x2 = otu_ids;
+        var y2 = values;
+        var labels2 = labels;
+
+        var tracebubble = {
+            x: x2,
+            y: y2,
+            mode: "markers",
+            text: labels2,
+            marker: {
+                color: otu_ids,
+                colorscale:'RdBu',
+                size: values
+            }
+        };
 
         var bubbledata = [tracebubble];
         var layout2 = {
-            title: "OTUs (Operational Taxonomic Units)",
+            title: "OTUs",
             xaxis: { title: "OTU ID" },
         };
         Plotly.newPlot("bubble", bubbledata, layout2);
 
     });
-
-
+////////////////////////////////////////////////////////////////////////
     demographic_data = parseInt(dataset)
     d3.json("samples.json").then((data) => {
         var dem_data = data.metadata.find(({ id }) => id === demographic_data);
@@ -79,7 +93,7 @@ function updatePlotly() {
         Object.entries(dem_data).forEach((key) => {   
             indv_dem_data.append("h4").text(key[0] + ": " + key[1]);    
         });
-
+////////////////////////////////////////////////////////////////////////
         var wfreq = dem_data.wfreq;
         console.log(wfreq)
 
@@ -96,21 +110,22 @@ function updatePlotly() {
                         size: 15
                     }
                 },
-                bar: { color: "black" },
+                bar: { color: "#5174C5" },
                 steps: [
-                    { range: [0, 1], color: 'rgb(255, 255, 255)' },
-                    { range: [1, 2], color: 'rgb(255, 230, 230)' },
-                    { range: [2, 3], color: 'rgb(255, 204, 204)' },
-                    { range: [3, 4], color: 'rgb(255, 179, 179)' },
-                    { range: [4, 5], color: 'rgb(255, 128, 128)' },
-                    { range: [5, 6], color: 'rgb(255, 102, 102)' },
-                    { range: [6, 7], color: 'rgb(255, 77, 77)' },
-                    { range: [7, 8], color: 'rgb(255, 51, 51)' },
-                    { range: [8, 9], color: 'rgb(200, 6, 6)' }
+                    { range: [0, 1], color: '#000000' },
+                    { range: [1, 2], color: '#696969' },
+                    { range: [2, 3], color: '#808080' },
+                    { range: [3, 4], color: '#A9A9A9' },
+                    { range: [4, 5], color: '#C0C0C0' },
+                    { range: [5, 6], color: '#D3D3D3' },
+                    { range: [6, 7], color: '#DCDCDC' },
+                    { range: [7, 8], color: '#F5F5F5' },
+                    { range: [8, 9], color: '#FFFFFF' }
                 ]
 
             }
         };
+////////////////////////////////////////////////////////////////////////        
         var datagauge = [tacegauge];
         Plotly.newPlot("gauge", datagauge);
 
